@@ -1,0 +1,55 @@
+{
+  "name": "c4cui",
+  "version": "1.4.7",
+  "description": "Highly customizable elegant react components",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git remote add origin https://github.com/japhethkemboi/c4cui.git"
+  },
+  "keywords": [
+    "CODE4CODE",
+    "C4C-COMPONENTS",
+    "BUTTON",
+    "INPUT",
+    "NAV"
+  ],
+  "author": "Japheth",
+  "license": "ISC",
+  "peerDependencies": {
+    "react": ">=16.8.0 <=19.0.0",
+    "react-dom": ">=16.8.0 <=19.0.0",
+    "react-easy-crop": "5.2.0",
+    "react-icons": "5.4.0",
+    "react-toastify": "11.0.2"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@swc/core": "^1.10.4",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "react": "^18.3.1",
+    "react-dom": "18.3.1",
+    "rollup": "^4.29.1",
+    "rollup-plugin-postcss": "^4.0.2",
+    "tailwindcss": "^3.4.17",
+    "tsup": "8.3.5",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "classnames": "^2.5.1",
+    "generate-password": "^1.7.1",
+    "react-quill-new": "^3.3.3",
+    "tailwind-merge": "^2.6.0"
+  }
+}
