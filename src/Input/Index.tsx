@@ -60,6 +60,7 @@ export const InputComponent = ({
   onKeyDown?: KeyboardEventHandler<HTMLInputElement> | undefined;
   onSearch?: () => void;
 }) => {
+  const [passWord, setPassWord] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   return (
@@ -119,18 +120,21 @@ export const InputComponent = ({
               </div>
             )}
             <input
-              type={type === "number" || (type === "password" && passwordVisible) ? "text" : type}
+              type={type === "number" || passwordVisible ? "text" : type}
               multiple={multiple}
               name={name}
-              value={value}
+              value={type === "password" ? passWord : value}
               step={step}
               min={minNumber}
               max={maxNumber}
               required={required}
               maxLength={maxLength}
-              minLength={minLength}
+              minLength={!minLength && type === "password" ? 5 : minLength}
               onKeyDown={onKeyDown}
-              onChange={(e) => onChange && onChange(e.target.value)}
+              onChange={(e) => {
+                type === "password" && setPassWord(e.target.value);
+                onChange && onChange(e.target.value);
+              }}
               readOnly={readOnly}
               placeholder={placeholder}
               defaultValue={defaultValue}
@@ -142,9 +146,9 @@ export const InputComponent = ({
               )}
             />
             <div className="flex gap-2 items-center absolute right-2 top-0 bottom-0">
-              {copyPassword && value && value.length > 7 && (
+              {copyPassword && passWord && passWord.length > 5 && (
                 <Button
-                  onClick={() => copyToClipboard(value)}
+                  onClick={() => copyToClipboard(passWord)}
                   outline={true}
                   className="p-2 hover:opacity-70 border-none"
                   icon={<BiCopy />}
@@ -160,26 +164,21 @@ export const InputComponent = ({
               )}
             </div>
           </div>
-          {copyPassword || generatePassword ? (
-            <div className="flex gap-2 items-center">
-              {generatePassword && (
-                <Button
-                  onClick={() =>
-                    onChange &&
-                    onChange(
-                      passwordGenerator.generate({
-                        length: 15,
-                        numbers: true,
-                      })
-                    )
-                  }
-                  className="border-none"
-                  label="Generate Password"
-                  outline={true}
-                />
-              )}
-            </div>
-          ) : null}
+          {generatePassword && (
+            <Button
+              onClick={() =>
+                setPassWord(
+                  passwordGenerator.generate({
+                    length: 15,
+                    numbers: true,
+                  })
+                )
+              }
+              className="border-none"
+              label="Generate Password"
+              outline={true}
+            />
+          )}
         </div>
       )}
       {suggestions && suggestions.length > 0 && (

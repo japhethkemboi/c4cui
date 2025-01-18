@@ -25,7 +25,10 @@ export const Button = ({
   return (
     <button
       type={type === "submit" ? "submit" : type === "reset" ? "reset" : "button"}
-      onClick={onClick}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick && onClick();
+      }}
       className={twMerge(
         classNames(
           "p-4 rounded-xl whitespace-nowrap flex items-center gap-2 transition-all justify-center hover:border-none hover:scale-95 bg-[var(--primary-color)] text-[var(--bg-color)]",

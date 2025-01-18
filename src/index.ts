@@ -7,5 +7,4 @@ export { NavProvider, useNav } from "./Nav/NavContext";
 export { Modal } from "./modal/Modal";
 export { Header } from "./Header/Index";
 export { ModalProvider, useModal } from "./modal/ModalContext";
-export { CropperProvider, useCropper } from "./cropper/CropperContext";
-export { Cropper } from "./cropper/Index";
+export { Cropper } from "./Cropper/Index";

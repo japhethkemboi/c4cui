@@ -1,5 +1,7 @@
 import typescript from "@rollup/plugin-typescript";
 import postcss from "rollup-plugin-postcss";
+import tailwindcss from "tailwindcss";
+import autoprefixer from "autoprefixer";
 
 export default {
   input: "src/index.ts",
@@ -8,12 +10,20 @@ export default {
     format: "cjs",
     sourcemap: true,
   },
-  external: ["react", "react-icons/pi", "react-icons/bi", "react-icons/go", "react-easy-crop", "react-toastify"],
+  external: [
+    "react",
+    "react-icons/pi",
+    "react-icons/bi",
+    "react-icons/go",
+    "react-easy-crop",
+    "react-toastify",
+    "react-quill-new",
+  ],
   plugins: [
     typescript(),
     postcss({
-      plugins: [tailwindcss("./tailwind.config.js")],
-      extract: true,
+      plugins: [tailwindcss(), autoprefixer()],
+      inject: true,
       minimize: true,
     }),
   ],

@@ -1,6 +1,6 @@
 {
   "name": "c4cui",
-  "version": "1.4.7",
+  "version": "1.6.0",
   "description": "Highly customizable elegant react components",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -27,7 +27,6 @@
   "peerDependencies": {
     "react": ">=16.8.0 <=19.0.0",
     "react-dom": ">=16.8.0 <=19.0.0",
-    "react-easy-crop": "5.2.0",
     "react-icons": "5.4.0",
     "react-toastify": "11.0.2"
   },
@@ -50,6 +49,7 @@
     "classnames": "^2.5.1",
     "generate-password": "^1.7.1",
     "react-quill-new": "^3.3.3",
+    "react-easy-crop": "5.2.0",
     "tailwind-merge": "^2.6.0"
   }
 }
