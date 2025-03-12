@@ -31,12 +31,13 @@ export const Button = ({
       }}
       className={twMerge(
         classNames(
-          "p-4 rounded-xl whitespace-nowrap flex items-center gap-2 transition-all justify-center hover:border-none hover:scale-95 bg-[var(--primary-color)] text-[var(--bg-color)]",
+          "p-2 rounded-xl whitespace-nowrap flex items-center gap-2 transition-all justify-center hover:scale-95 bg-[var(--primary-color)] text-[var(--background-color)]",
           {
-            "border border-[var(--primary-color)] bg-transparent text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-[var(--bg-color)]":
+            "px-3 md:p-3 md:px-4": (label && icon) || label,
+            "border border-[var(--primary-color)] bg-transparent text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-[var(--background-color)]":
               outline,
-            "bg-[var(--primary-color)] text-[var(--bg-color)]": active,
-            "cursor-not-allowed opacity-70 scale-100": disabled,
+            "bg-[var(--primary-color)] text-[var(--background-color)]": active,
+            "cursor-not-allowed opacity-70 hover:scale-100": disabled,
           },
           className
         )

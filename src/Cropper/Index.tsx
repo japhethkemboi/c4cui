@@ -1,9 +1,9 @@
 import React, { useRef, useState } from "react";
 import { PiArrowArcLeft, PiArrowArcRight, PiMinus, PiPen, PiPlus } from "react-icons/pi";
 import EasyCropper from "react-easy-crop";
-import { toast } from "react-toastify";
 import { Button } from "../Button/Index";
 import { InputComponent } from "../Input/Index";
+import { toast } from "../Toast/Index";
 
 export const Cropper = ({
   title,
@@ -133,7 +133,7 @@ export const Cropper = ({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   return (
-    <div className="flex flex-col gap-4 items-center shrink-0 justify-center relative bg-[var(--bg-color)] rounded p-4">
+    <div className="flex flex-col gap-4 items-center shrink-0 justify-center relative bg-[var(--background-color)] rounded p-4">
       <h2 className="font-semibold text-xl text-[var(--text-color)]">{title}</h2>
       <div className="relative flex size-[400px]">
         <Button

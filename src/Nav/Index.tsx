@@ -1,3 +1,4 @@
+"use client";
 import React, { ReactNode, useState } from "react";
 import { PiMagnifyingGlass, PiUser } from "react-icons/pi";
 import classNames from "classnames";
@@ -33,20 +34,10 @@ interface Profile {
   onUsernameClick?: () => void;
 }
 
-interface Theme {
-  bgColor?: string;
-  primaryColor?: string;
-  textColor?: string;
-  border?: boolean;
-  borderStyle?: string;
-  titleColor?: string;
-}
-
 export const Nav = ({
   header,
   items,
   profile,
-  theme,
   type,
   rightIcons,
   hideProfileIcon,
@@ -56,7 +47,6 @@ export const Nav = ({
   header?: Header;
   items?: Item[];
   profile?: Profile;
-  theme?: Theme;
   type?: "xnav" | "ynav" | "responsive";
   rightIcons?: ReactNode[];
   hideProfileIcon?: boolean;
@@ -70,7 +60,7 @@ export const Nav = ({
   return (
     <div
       className={classNames(
-        "flex md:flex-col md:h-screen gap-8 p-4 justify-between bg-[var(--nav-bg-color)] text-[var(--nav-text-color)] shrink-0 border-r border-black/10",
+        "flex md:flex-col md:h-screen gap-8 p-4 justify-between bg-[var(--nav-bg-color)] text-[var(--nav-text-color)] shrink-0 border-r border-[var(--border-color)]",
         { "flex-row md:flex-row h-auto w-full": type === "xnav", "flex-col md:flex-col h-full w-auto": type === "ynav" }
       )}
     >
@@ -212,14 +202,14 @@ export const Nav = ({
           )}
           {!hideProfileIcon && profile?.avatar ? (
             <img
-              className={classNames("size-6", { "cursor-pointer": profile.onAvatarClick })}
+              className={classNames("size-8 rounded-full", { "cursor-pointer": profile.onAvatarClick })}
               onClick={profile.onAvatarClick}
               src={profile.avatar}
             />
           ) : (
             <p
               onClick={profile?.onAvatarClick}
-              className={classNames("rounded-full p-2 bg-[var(--primary-color)] text-[var(--bg-color)]", {
+              className={classNames("rounded-full p-2 bg-[var(--primary-color)] text-[var(--background-color)]", {
                 "cursor-pointer": profile?.onAvatarClick,
               })}
             >

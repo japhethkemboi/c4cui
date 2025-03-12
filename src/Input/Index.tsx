@@ -1,11 +1,11 @@
 import React, { KeyboardEventHandler, useState } from "react";
 import { PiEye, PiEyeClosed, PiMagnifyingGlass } from "react-icons/pi";
 import { BiCopy } from "react-icons/bi";
-import { copyToClipboard } from "../utils";
+import { passwordGenerator } from "../utils";
 import classNames from "classnames";
-import passwordGenerator from "generate-password";
 import { Button } from "../Button/Index";
 import { twMerge } from "tailwind-merge";
+import { toast } from "../Toast/Index";
 
 export const InputComponent = ({
   label,
@@ -33,13 +33,14 @@ export const InputComponent = ({
   multiple,
   step,
   onSearch,
+  error,
 }: {
   label?: string;
   name?: string;
   type?: string;
   readOnly?: boolean;
   required?: boolean;
-  options?: Array<{ id: string; disabled?: boolean; value?: string; selected?: boolean }>;
+  options?: Array<{ id: string; disabled?: boolean; value?: string }>;
   labelClasses?: string;
   inputClasses?: string;
   placeholder?: string;
@@ -59,13 +60,13 @@ export const InputComponent = ({
   onChange?: (value: string) => void;
   onKeyDown?: KeyboardEventHandler<HTMLInputElement> | undefined;
   onSearch?: () => void;
+  error?: string;
 }) => {
-  const [passWord, setPassWord] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   return (
     <div className="flex flex-col items-start w-full gap-4">
-      {label && <h4 className={classNames("md:text-lg", labelClasses)}>{label}</h4>}
+      {label && <label className={classNames(labelClasses)}>{label}</label>}
       {type === "textarea" ? (
         <textarea
           name={name}
@@ -80,7 +81,7 @@ export const InputComponent = ({
           rows={rows || 4}
           className={twMerge(
             classNames(
-              "w-full p-3 md:p-4 border border-black/20 bg-transparent rounded placeholder:text-gray-600",
+              "w-full p-2 md:p-3 border border-[var(--border-color)] bg-transparent rounded-xl placeholder:text-[var(--placeholder-color)]",
               inputClasses
             )
           )}
@@ -90,7 +91,7 @@ export const InputComponent = ({
           onChange={(e) => onChange && onChange(e.target.value)}
           className={twMerge(
             classNames(
-              "w-full p-3 md:p-4 border border-black/20 bg-transparent rounded placeholder:text-gray-600",
+              "w-full p-2 md:p-3 border border-[var(--border-color)] bg-transparent rounded-xl placeholder:text-[var(--placeholder-color)]",
               inputClasses
             )
           )}
@@ -98,10 +99,13 @@ export const InputComponent = ({
           disabled={readOnly}
           required={required}
           aria-placeholder={placeholder}
-          defaultValue={defaultValue}
+          value={value || ""}
         >
+          <option disabled value="">
+            SELECT
+          </option>
           {options?.map((option) => (
-            <option selected={option.selected} disabled={option.disabled} key={option.id} value={option.id}>
+            <option key={option.id} value={option.id} disabled={option.disabled}>
               {option.value || option.id}
             </option>
           ))}
@@ -113,7 +117,7 @@ export const InputComponent = ({
               <div className="flex gap-2 items-center absolute left-2 top-0 bottom-0">
                 <Button
                   onClick={onSearch}
-                  className="p-2 hover:opacity-70 border-none rounded-full"
+                  className="p-2 hover:opacity-70 border-none rounded-xl-full"
                   outline={true}
                   icon={<PiMagnifyingGlass size={18} />}
                 />
@@ -123,7 +127,7 @@ export const InputComponent = ({
               type={type === "number" || passwordVisible ? "text" : type}
               multiple={multiple}
               name={name}
-              value={type === "password" ? passWord : value}
+              value={value}
               step={step}
               min={minNumber}
               max={maxNumber}
@@ -131,24 +135,48 @@ export const InputComponent = ({
               maxLength={maxLength}
               minLength={!minLength && type === "password" ? 5 : minLength}
               onKeyDown={onKeyDown}
-              onChange={(e) => {
-                type === "password" && setPassWord(e.target.value);
-                onChange && onChange(e.target.value);
-              }}
+              onChange={(e) => onChange && onChange(e.target.value)}
               readOnly={readOnly}
               placeholder={placeholder}
               defaultValue={defaultValue}
+              onKeyPress={(e) => {
+                if (type === "number") {
+                  if (
+                    e.key !== "Backspace" &&
+                    e.key !== "Delete" &&
+                    ((maxNumber && parseInt(e.key) > maxNumber) ||
+                      (minNumber && parseInt(e.key) < minNumber) ||
+                      !/^[0-9]$/.test(e.key))
+                  ) {
+                    e.preventDefault();
+                  }
+                } else if (type === "puretext") {
+                  if (!/^[a-z]$/.test(e.key.toLowerCase())) {
+                    e.preventDefault();
+                  }
+                }
+              }}
               className={twMerge(
                 classNames(
-                  "w-full p-3 md:p-4 border border-black/20 rounded placeholder:text-gray-600 bg-transparent",
-                  { "p-2 pl-11 md:p-2 md:pl-11 rounded-full": type === "search", inputClasses }
+                  "w-full p-2 md:p-3 border border-[var(--border-color)] rounded-xl placeholder:text-[var(--placeholder-color)] bg-transparent",
+                  { "p-2 pl-11 md:p-2 md:pl-11 rounded-full": type === "search" },
+                  inputClasses
                 )
               )}
             />
             <div className="flex gap-2 items-center absolute right-2 top-0 bottom-0">
-              {copyPassword && passWord && passWord.length > 5 && (
+              {copyPassword && value && value.length > 5 && (
                 <Button
-                  onClick={() => copyToClipboard(passWord)}
+                  onClick={() =>
+                    navigator.clipboard
+                      .writeText(value)
+                      .then(() => {
+                        toast.info("Copied to clipboard.");
+                      })
+                      .catch((err) => {
+                        toast.info(err.messge || "Failed to copy to clipboard.");
+                      })
+                  }
                   outline={true}
                   className="p-2 hover:opacity-70 border-none"
                   icon={<BiCopy />}
@@ -166,14 +194,15 @@ export const InputComponent = ({
           </div>
           {generatePassword && (
             <Button
-              onClick={() =>
-                setPassWord(
-                  passwordGenerator.generate({
-                    length: 15,
-                    numbers: true,
-                  })
-                )
-              }
+              onClick={() => {
+                const newPassword = passwordGenerator({
+                  length: 16,
+                  includeNumbers: true,
+                  includeSymbols: true,
+                  excludeSimilarCharacters: true,
+                });
+                onChange && onChange(newPassword);
+              }}
               className="border-none"
               label="Generate Password"
               outline={true}
@@ -194,6 +223,7 @@ export const InputComponent = ({
           ))}
         </div>
       )}
+      {error && <span className="text-red-500 text-xs">{error}</span>}
     </div>
   );
 };
